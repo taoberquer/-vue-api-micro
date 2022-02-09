@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  app:
+    image: 'php:8.1-fpm'
+    ports:
+      - '8080:80'
+    volumes:
+      - './:/app'
+    working_dir: '/app'
+  #    command:
+  #      - 'docker-php-ext-install pdo_mysql '
+  #      - 'php -S 0.0.0.0:8080 -t /public'
+  
+  ###> doctrine/doctrine-bundle ###
+  database:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: app
+      #      # You should definitely change the password in production
+      MYSQL_PASSWORD: ChangeMe
+      MYSQL_USER: symfony
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - db-data:/var/lib/mysql
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/postgresql/data:rw
+###< doctrine/doctrine-bundle ###
+
+volumes:
+  ###> doctrine/doctrine-bundle ###
+  db-data:
+###< doctrine/doctrine-bundle ###
