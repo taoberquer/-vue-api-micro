@@ -7,6 +7,7 @@ framework:
     trusted_hosts: '%env(TRUSTED_HOSTS)%'
     # See https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#headers
     trusted_headers: ['x-forwarded-for', 'x-forwarded-proto']
+    serializer: { enable_annotations: true }
 
     #esi: true
     #fragments: true

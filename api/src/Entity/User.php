@@ -7,25 +7,69 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'normalization_context' => ['groups' => ['user:read']],
+        ],
+        'post' => [
+            'security' => 'is_granted("ROLE_ADMIN") or object = user',
+            'normalization_context' => ['groups' => ['user:read']],
+            'denormalization_context' => ['groups' => ['user:write']],
+        ]
+    ],
+    itemOperations: [
+        'get' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'normalization_context' => ['groups' => ['user:read']],
+        ],
+        'put' => [
+            'security' => 'is_granted("ROLE_ADMIN") or object == user',
+            'normalization_context' => ['groups' => ['user:read']],
+            'denormalization_context' => ['groups' => ['user:write']],
+        ],
+        'delete' => [
+            'security' => 'is_granted("ROLE_ADMIN") and object == user',
+        ],
+    ],
+    denormalizationContext: ['groups' => ['user:write']],
+    normalizationContext: ['groups' => ['user:read']],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups ({"user:read"})
+     */
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    /**
+     * @Groups ({"user:read", "user:write"})
+     */
     private $email;
 
     #[ORM\Column(type: 'json')]
+    /**
+     * @Groups ({"user:read", "user:write"})
+     */
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
+
+    /**
+     * @Groups ({"user:write"})
+     */
+    private $plainPassword;
 
     public function getId(): ?int
     {
@@ -73,12 +117,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPlainPassword(): string
+    {
+        return (string) $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
     /**
-     * @see PasswordAuthenticatedUserInterface
+     * @see UserInterface
      */
     public function getPassword(): string
     {
-        return $this->password;
+        return (string) $this->password;
     }
 
     public function setPassword(string $password): self
@@ -94,6 +150,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
+    }
+
+    public function persist()
+    {
+
     }
 }

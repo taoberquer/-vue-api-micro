@@ -20,6 +20,9 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
+    App\EventListener\UserSubscriber:
+        tags: [ 'doctrine.event_subscriber' ]
+        
     App\OpenApi\JwtDecorator:
         decorates: 'api_platform.openapi.factory'
         arguments: [ '@.inner' ]
