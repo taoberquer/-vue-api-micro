@@ -10,27 +10,74 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => ['orders:read']],
+        ],
+        'post' => [
+            'denormalization_context' => ['groups' => ['order:write']],
+            'normalization_context' => ['groups' => ['order:read']],
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => ['order:read']],
+        ],
+        'put' => [
+            'denormalization_context' => ['groups' => ['order:write']],
+            'normalization_context' => ['groups' => ['order:read']],
+        ],
+        'delete' => [
+            'denormalization_context' => ['groups' => ['order:write']],
+            'normalization_context' => ['groups' => ['order:read']],
+        ],
+    ],
+    denormalizationContext: [
+        'groups' => ['order:write']
+    ],
+    normalizationContext: [
+        'groups' => ['order:read', 'orders:read']
+    ]
+)]
 class Order
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups ({"order:read", "orders:read"})
+     */
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups ({"order:read", "order:write", "orders:read"})
+     */
     private $status;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups ({"order:read", "order:write"})
+     */
     private $address;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups ({"order:read", "order:write"})
+     */
     private $zip_code;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups ({"order:read", "order:write"})
+     */
     private $city;
 
     #[ORM\OneToMany(mappedBy: 'order_from', targetEntity: Piece::class)]
+    /**
+     * @Groups ({"order:read", "order:write"})
+     */
     private $pieces;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
