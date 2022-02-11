@@ -32,8 +32,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'security' => 'is_granted("ROLE_ADMIN")'
         ]
     ],
-    normalization_context: ['groups' => ['piece:read']],
-    denormalization_context: ['groups' => ['piece:write']],
+    denormalizationContext: ['groups' => ['piece:write']],
+    normalizationContext: ['groups' => ['piece:read', 'pieces:read']]
 )]
 class Piece
 {
@@ -50,12 +50,6 @@ class Piece
      * @Groups({"piece:read", "piece:write"})
      */
     private $quality;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    /**
-     * @Groups({"piece:read", "piece:write"})
-     */
-    private $type;
 
     #[ORM\Column(type: 'string', length: 255)]
     /**
@@ -98,6 +92,9 @@ class Piece
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'pieces')]
     #[ORM\JoinColumn(nullable: false)]
+    /**
+     * @Groups({"piece:read", "piece:write"})
+     */
     private $category;
 
     public function getId(): ?int

@@ -9,15 +9,46 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DonationRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => ['donations:read']],
+            'security' => 'is_granted("ROLE_ADMIN")',
+        ],
+        'post' => [
+            'denormalization_context' => ['groups' => ['donation:write']],
+            'normalization_context' => ['groups' => ['donation:read']],
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => ['donation:read']],
+        ],
+        'patch' => [
+            'denormalization_context' => ['groups' => ['donation:write']],
+            'normalization_context' => ['groups' => ['donation:read']],
+        ],
+        'delete' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
+        ]
+    ],
+    denormalizationContext: ['groups' => ['donation:write']],
+    normalizationContext: ['groups' => ['donation:read', 'donations:read']],
+)]
 class Donation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups ({"donation:read", "donations:read"})
+     */
     private $id;
 
     #[ORM\ManyToMany(targetEntity: Category::class)]
+    /**
+     * @Groups ({"donation:read"})
+     */
     private $Categories;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'donations')]
@@ -25,6 +56,9 @@ class Donation
     private $user;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups ({"donation:read", "donations:read"})
+     */
     private $status;
 
     public function __construct()

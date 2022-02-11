@@ -26,12 +26,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'normalization_context' => ['groups' => ['order:read']],
         ],
         'put' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
             'denormalization_context' => ['groups' => ['order:write']],
             'normalization_context' => ['groups' => ['order:read']],
         ],
         'delete' => [
-            'denormalization_context' => ['groups' => ['order:write']],
-            'normalization_context' => ['groups' => ['order:read']],
+            'security' => 'is_granted("ROLE_ADMIN")',
         ],
     ],
     denormalizationContext: [

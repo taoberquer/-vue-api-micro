@@ -9,15 +9,49 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => ['categories:read']],
+        ],
+        'post' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'denormalization_context' => ['groups' => ['category:write']],
+            'normalization_context' => ['groups' => ['category:read']],
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => 'category:read'],
+        ],
+        'put' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'normalization_context' => ['groups' => 'category:read'],
+            'denormalization_context' => ['groups' => 'category:write'],
+        ],
+        'delete' => ['security' => 'is_granted("ROLE_ADMIN")'],
+    ],
+    denormalizationContext: [
+        "groups" => ["category:write"]
+    ],
+    normalizationContext: [
+        "groups" => ["category:read", "categories:read"]
+    ]
+)]
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups ({"category:read", "categories:read"})
+     */
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups ({"category:read", "category:write", "categories:read"})
+     */
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Piece::class)]
