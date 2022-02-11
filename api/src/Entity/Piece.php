@@ -5,38 +5,92 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PieceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PieceRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => ['pieces:read']],
+      ],
+        'post' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'denormalization_context' => ['groups' => ['piece:write']],
+            'normalization_context' => ['groups' => ['piece:read']]
+        ]
+ ]
+    itemOperations: [
+        'get' => [
+            'normalization_context' => ['groups' => ['piece:read']]
+        ],
+        'put' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'denormalization_context' => ['groups' => ['piece:write']],
+            'normalization_context' => ['groups' => ['piece:read']]
+        ],
+        'delete' => [
+            'security' => 'is_granted("ROLE_ADMIN")'
+        ]
+    ],
+    normalization_context: ['groups' => ['piece:read']],
+    denormalization_context: ['groups' => ['piece:write']],
+)]
 class Piece
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups({"piece:read"})
+     */
     private $id;
 
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups({"piece:read", "piece:write"})
+     */
     private $quality;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups({"piece:read", "piece:write"})
+     */
     private $type;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups({"piece:read", "piece:write"})
+     */
     private $color;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups({"piece:read", "pieces:read", "piece:write"})
+     */
     private $size;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups({"piece:read", "piece:write"})
+     */
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups({"piece:read", "piece:write", "pieces:read"})
+     */
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups({"piece:read", "piece:write"})
+     */
     private $damage;
 
     #[ORM\Column(type: 'boolean')]
+    /**
+     * @Groups({"piece:read", "piece:write", "pieces:read"})
+     */
     private $sale;
 
     public function getId(): ?int
