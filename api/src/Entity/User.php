@@ -19,7 +19,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'normalization_context' => ['groups' => ['user:read']],
         ],
         'post' => [
-            'security' => 'is_granted("ROLE_ADMIN") or object = user',
             'normalization_context' => ['groups' => ['user:read']],
             'denormalization_context' => ['groups' => ['user:write']],
         ]
@@ -30,12 +29,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'normalization_context' => ['groups' => ['user:read']],
         ],
         'put' => [
-            'security' => 'is_granted("ROLE_ADMIN") or object == user',
+            'security' => 'is_granted("ROLE_ADMIN")',
             'normalization_context' => ['groups' => ['user:read']],
             'denormalization_context' => ['groups' => ['user:write']],
         ],
         'delete' => [
-            'security' => 'is_granted("ROLE_ADMIN") and object == user',
+            'security' => 'is_granted("ROLE_ADMIN")',
         ],
     ],
     denormalizationContext: ['groups' => ['user:write']],
