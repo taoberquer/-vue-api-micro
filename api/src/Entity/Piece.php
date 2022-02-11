@@ -96,6 +96,10 @@ class Piece
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'pieces')]
     private $order_from;
 
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'pieces')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $category;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -205,6 +209,18 @@ class Piece
     public function setOrderFrom(?Order $order_from): self
     {
         $this->order_from = $order_from;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
