@@ -1,12 +1,7 @@
 <template>
     <div>
-        <h3>Sign In</h3>
-        <div v-if="isLoading === true" class="d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            </div>
-        <Vuemik v-else
+        <h3>Login</h3>
+        <Vuemik
                 :initialValues="{
           email: user.email,
           password: user.password,
@@ -34,16 +29,15 @@ import Field from "../../lib/Vuemik/Field";
 import {conf} from "../conf";
 
 export default {
-    inject: ['setAuth'],
+    inject: ['setAuth', 'setLoading'],
     name: "Form",
     components: {Field, Vuemik},
     data: () => ({
         user: {email: '', password: ''},
-        isLoading: false
     }),
     methods: {
         userLogin(user) {
-            this.isLoading = true;
+            this.setLoading(true);
             fetch(`${conf.apiUrl}/authentication_token`, {
                 headers: {
                     "Accept": "application/json",
@@ -57,9 +51,8 @@ export default {
             }).then((resp) => {
                 return resp.json();
             }).then(data => {
-                console.log(data.token);
                 this.setAuth(data.token);
-                this.isLoading = false;
+                this.setLoading(false);
                 this.$router.push("/");
             });
         }

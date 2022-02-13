@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex w-auto">
 <!--    <img class="card-img-top" src="../assets/logo.png" alt="Card image cap">-->
     <div class="card-img">
       <slot name="img"></slot>

@@ -7,7 +7,7 @@
                         <li>
                             <router-link class="nav-link" to="/">Home</router-link>
                         </li>
-                        <li v-if="this.token">
+                        <li>
                             <div class="dropdown">
                                 <button class="nav-link dropdown-toggle dropdown-nav pointer" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                     Items

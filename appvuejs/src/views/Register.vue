@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3>Sign In</h3>
+        <h3>Register</h3>
         <Vuemik
             :initialValues="{
           email: user.email,
@@ -52,12 +52,13 @@ export default {
                     plainPassword: user.password
                 })
             }) .then((resp) => {
-                return resp.json();
-            }) .then(data => {
-                console.log(data.token);
+                if (resp.status === 201) {
+                    this.$router.push('/');
+                } else {
+                    this.errorMessage = "Error";
+                }
             })
             ;
-            this.errorMessage = "Probleme sur l'inscription.";
         },
         checkSamePasswords: function(val) {
             return val == this.vm.password;

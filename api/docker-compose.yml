@@ -10,6 +10,7 @@ services:
     working_dir: '/app'
   #    command:
   #      - 'docker-php-ext-install pdo_mysql '
+  #      - php bin/console lexik:jwt:generate-keypair
   #      - 'php -S 0.0.0.0:80 -t public'
   
   ###> doctrine/doctrine-bundle ###
