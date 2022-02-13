@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\OrderController;
+use App\Controller\ConfirmOrderController;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,10 +19,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'security' => 'is_granted("ROLE_ADMIN")',
             'normalization_context' => ['groups' => ['orders:read']],
         ],
-        'post' => [
-            'denormalization_context' => ['groups' => ['order:write']],
-            'normalization_context' => ['groups' => ['order:read']],
-        ],
         'mine' => [
             'method' => 'GET',
             'path' => '/orders/mine',
@@ -31,6 +28,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
         'confirm' => [
             'method' => 'POST',
+            'controller' => ConfirmOrderController::class,
             'path' => '/orders/confirm',
             'denormalization_context' => ['groups' => ['order:write']],
             'normalization_context' => ['groups' => ['order:read']],
