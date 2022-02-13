@@ -8,10 +8,16 @@
                             <router-link class="nav-link" to="/">Home</router-link>
                         </li>
                         <li v-if="this.user">
-                            <router-link class="nav-link" to="/items">Items</router-link>
-                        </li>
-                        <li v-if="this.user">
-                            <router-link class="nav-link" to="/categories">Categories</router-link>
+                            <div class="dropdown">
+                                <button class="nav-link dropdown-toggle dropdown-nav pointer" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Items
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <span class="ml-3 font-weight-bold">Categories</span>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li v-for="cat in categories" :key="cat.id"><a class="dropdown-item pointer" @click="getCategory(cat.name)">{{ cat.name }}</a></li>
+                                </ul>
+                            </div>
                         </li>
                     </div>
                     <div class="d-flex">
@@ -33,6 +39,28 @@
 
 <script>
 export default {
+    data() {
+        return {
+            categories: [
+                {
+                    id: 'sldjkflksjdflks',
+                    name: "Shoes",
+                },
+                {
+                    id: 'lskdjflkdsdf',
+                    name: "Trousers",
+                },
+                {
+                    id: 'lskdjfdlksdf',
+                    name: "T-shirts",
+                },
+                {
+                    id: 'lsdkdjflksdf',
+                    name: "Sweat",
+                },
+            ]
+        }
+    },
     inject: ['setAuth'],
     props: {
         user: null
@@ -42,6 +70,9 @@ export default {
         logout() {
             localStorage.removeItem('user');
             this.setAuth(null);
+        },
+        getCategory(name) {
+            this.$router.push(`/categories/${name.toLowerCase()}`);
         }
     }
 };

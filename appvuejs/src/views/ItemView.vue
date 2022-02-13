@@ -11,11 +11,11 @@
                         <h4>{{ item.title }}</h4>
                         <p class="mb-4">{{ item.price }} €</p>
                         <p class="mb-4">{{ item.description }}</p>
-                        <p><span class="font-weight-bold">Couleur : </span></p>
+                        <p><span class="font-weight-bold">Color : </span></p>
                     </div>
-                    <p><span class="font-weight-bold">Taille : </span></p>
+                    <p><span class="font-weight-bold">Size : </span></p>
                     <div>
-                        <button class="btn btn-primary">Ajouter au panier</button>
+                        <button class="btn btn-primary">Add to cart</button>
                     </div>
                 </div>
             </template>

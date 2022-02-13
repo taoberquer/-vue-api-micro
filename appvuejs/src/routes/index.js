@@ -3,7 +3,7 @@ import {createRouter, createWebHashHistory} from "vue-router";
 export default createRouter({
   history: createWebHashHistory(),
   routes: [
-    {path: "/home", component: () => import("../views/Home.vue")},
+    {path: "/", component: () => import("../views/ListItems.vue")},
     {path: "/login", component: () => import("../views/Login.vue")},
     {path: "/register", component: () => import("../views/Register.vue")},
     {path: "/items", component: () => import("../views/ListItems.vue")},

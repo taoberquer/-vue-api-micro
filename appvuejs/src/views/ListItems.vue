@@ -1,11 +1,11 @@
 <template>
   <div class="panel">
-    <div class="separator mb-2">{{ nbItems }} articles trouvés</div>
+    <div class="separator mb-2">{{ nbItems }} items found</div>
     <div class="panel-body row justify-content-center">
       <Card class="col-2 m-2 flex-column" v-for="item in items" :key="item.id">
         <template v-slot:img>
           <!--<img :src="item.thumbnail" />-->
-          <img style="cursor: pointer;" @click="showDetails(item.id)" src="../assets/test.png" contain height="300" />
+          <img class="pointer" @click="showDetails(item.id)" src="../assets/test.png" contain height="300" />
         </template>
         <template v-slot:infos>
           <h4>{{ item.title }}</h4>

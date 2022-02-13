@@ -11,3 +11,10 @@
     align-self: center;
     padding: 0;
 }
+.dropdown-nav {
+    border: none;
+    background: none;
+}
+.pointer {
+    cursor: pointer;
+}
