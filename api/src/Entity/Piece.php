@@ -5,15 +5,23 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PieceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use ApiPlatform\Core\Annotation\ApiProperty;
+
 
 #[ORM\Entity(repositoryClass: PieceRepository::class)]
+#[Vich\Uploadable]
 #[ApiResource(
     collectionOperations: [
         'get' => [
             'normalization_context' => ['groups' => ['pieces:read']],
         ],
         'post' => [
+            'input_formats' => [
+                'multipart' => ['multipart/form-data'],
+            ],
             'security' => 'is_granted("ROLE_ADMIN")',
             'denormalization_context' => ['groups' => ['piece:write']],
             'normalization_context' => ['groups' => ['piece:read']]
@@ -33,7 +41,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ]
     ],
     denormalizationContext: ['groups' => ['piece:write']],
-    normalizationContext: ['groups' => ['piece:read', 'pieces:read']]
+    normalizationContext: ['groups' => ['piece:read', 'pieces:read']],
 )]
 class Piece
 {
@@ -87,15 +95,33 @@ class Piece
      */
     private $sale;
 
-    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'pieces')]
-    private $order_from;
-
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'pieces')]
     #[ORM\JoinColumn(nullable: false)]
     /**
      * @Groups({"piece:read", "piece:write"})
      */
     private $category;
+
+    /**
+     * @Groups ({"piece:read"})
+     */
+    public ?string $contentUrl = null;
+
+    /**
+     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
+     */
+    #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "filePath")]
+    #[Assert\NotNull(groups: ['piece:write'])]
+    /**
+     * @Groups ({"piece:write"})
+     */
+    public ?File $file = null;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    #[ORM\Column(nullable: true)]
+    public ?string $filePath = null;
 
     public function getId(): ?int
     {
@@ -194,18 +220,6 @@ class Piece
     public function setSale(bool $sale): self
     {
         $this->sale = $sale;
-
-        return $this;
-    }
-
-    public function getOrderFrom(): ?Order
-    {
-        return $this->order_from;
-    }
-
-    public function setOrderFrom(?Order $order_from): self
-    {
-        $this->order_from = $order_from;
 
         return $this;
     }
