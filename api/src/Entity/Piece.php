@@ -220,12 +220,12 @@ class Piece
 
     public function getSold(): ?bool
     {
-        return $this->sale;
+        return $this->sold;
     }
 
     public function setSold(bool $sold): self
     {
-        $this->sale = $sold;
+        $this->sold = $sold;
 
         return $this;
     }
