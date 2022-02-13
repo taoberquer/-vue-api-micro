@@ -20,6 +20,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'denormalization_context' => ['groups' => ['donation:write']],
             'normalization_context' => ['groups' => ['donation:read']],
         ],
+        'mine' => [
+            'method' => 'GET',
+            'path' => '/donations/mine',
+            'controller' => DonationController::class,
+            'security' => 'is_granted("ROLE_USER")',
+        ],
     ],
     itemOperations: [
         'get' => [
