@@ -25,7 +25,7 @@ export default {
     },
     data () {
         return {
-            token: null,
+            token: localStorage.getItem('token')
             isLoading: false,
         }
     },
