@@ -1,0 +1,13 @@
+#app {
+    margin-top: 0 !important;
+}
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.card-img {
+    width: min-content;
+    align-self: center;
+    padding: 0;
+}

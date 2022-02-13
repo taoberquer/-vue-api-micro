@@ -1,20 +1,11 @@
 <template>
-  <div class="card" style="width: 18rem;">
-
+  <div class="d-flex">
 <!--    <img class="card-img-top" src="../assets/logo.png" alt="Card image cap">-->
-    <div class="card-image-top">
-      <slot name="header"></slot>
+    <div class="card-img">
+      <slot name="img"></slot>
     </div>
-    <div class="card-body">
-      <slot name="content"></slot>
+    <div class="text-left mt-1">
+      <slot name="infos"></slot>
     </div>
   </div>
 </template>
-
-<script>
-  export default {
-    name: 'Card',
-  };
-</script>
-<style>
-</style>

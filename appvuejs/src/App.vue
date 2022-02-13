@@ -5,6 +5,10 @@
     </div>
 </template>
 
+<style>
+    @import './assets/app.css';
+</style>
+
 <script>
 import Nav from './components/Nav.vue';
 
