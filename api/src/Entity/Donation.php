@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\ConfirmDonationController;
 use App\Repository\DonationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -31,13 +32,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'get' => [
             'normalization_context' => ['groups' => ['donation:read']],
         ],
+        'confirm' => [
+            'method' => 'POST',
+            'path' => '/donations/{id}/confirm',
+            'controller' => ConfirmDonationController::class,
+            'security' => 'is_granted("ROLE_ADMIN")',
+        ],
         'patch' => [
             'denormalization_context' => ['groups' => ['donation:write']],
             'normalization_context' => ['groups' => ['donation:read']],
         ],
         'delete' => [
             'security' => 'is_granted("ROLE_ADMIN")',
-        ]
+        ],
     ],
     denormalizationContext: ['groups' => ['donation:write']],
     normalizationContext: ['groups' => ['donation:read', 'donations:read']],
