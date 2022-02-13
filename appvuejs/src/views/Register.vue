@@ -18,10 +18,6 @@
                 <label class="form-label">Password</label>
                 <Field name="password" component="input" type="password" class="form-control"/>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <Field name="confirmPassword" component="input" type="password" class="form-control"/>
-            </div>
             <Field name="submit" component="input" type="submit" @click="handleSubmit"/>
         </Vuemik>
     </div>
@@ -30,24 +26,37 @@
 <script>
 import Vuemik from "../../lib/Vuemik/Vuemik";
 import Field from "../../lib/Vuemik/Field";
+import {conf} from "../conf.js";
 
 export default {
     name: "Form",
     components: {Field, Vuemik},
     data: () => ({
-        user: {email: '', password: '', confirmPassword: ''},
+        user: {email: '', password: ''},
         errorMessage: null,
     }),
+    beforeMount() {
+
+    },
     methods: {
         userRegister(user) {
-            // register
 
-            // good
-            this.$router.push('/login');
-
-
-            // pas good
-            console.log(user)
+            fetch(`${conf.apiUrl}/users`, {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    email: user.email,
+                    plainPassword: user.password
+                })
+            }) .then((resp) => {
+                return resp.json();
+            }) .then(data => {
+                console.log(data.token);
+            })
+            ;
             this.errorMessage = "Probleme sur l'inscription.";
         },
         checkSamePasswords: function(val) {
