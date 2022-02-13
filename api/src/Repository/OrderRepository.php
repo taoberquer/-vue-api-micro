@@ -32,6 +32,8 @@ class OrderRepository extends ServiceEntityRepository
         $order->setZipCode($zip_code);
         $order->setCredits($total);
         $this->getEntityManager()->persist($order);
+        $user->setCredits($user->getCredits() - $total);
+        $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
 
