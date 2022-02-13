@@ -7,7 +7,7 @@
                         <li>
                             <router-link class="nav-link" to="/">Home</router-link>
                         </li>
-                        <li v-if="this.user">
+                        <li v-if="this.token">
                             <div class="dropdown">
                                 <button class="nav-link dropdown-toggle dropdown-nav pointer" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                     Items
@@ -21,13 +21,13 @@
                         </li>
                     </div>
                     <div class="d-flex">
-                        <li v-if="!this.user">
+                        <li v-if="!this.token">
                             <router-link class="nav-link" to="/register">Sign Up</router-link>
                         </li>
-                        <li v-if="!this.user">
+                        <li v-if="!this.token">
                             <router-link class="nav-link" to="/login">Login</router-link>
                         </li>
-                        <li v-if="this.user">
+                        <li v-if="this.token">
                             <button type="submit" class="nav-link" @click="logout">Logout</button>
                         </li>
                     </div>
@@ -63,12 +63,12 @@ export default {
     },
     inject: ['setAuth'],
     props: {
-        user: null
+        token: null
     },
     name: 'Nav',
     methods: {
         logout() {
-            localStorage.removeItem('user');
+            localStorage.removeItem('token');
             this.setAuth(null);
         },
         getCategory(name) {

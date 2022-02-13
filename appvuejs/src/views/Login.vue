@@ -1,13 +1,18 @@
 <template>
     <div>
         <h3>Sign In</h3>
-        <Vuemik
-            :initialValues="{
+        <div v-if="isLoading === true" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            </div>
+        <Vuemik v-else
+                :initialValues="{
           email: user.email,
           password: user.password,
         }"
-            :onSubmit="userLogin"
-            v-slot="{ handleSubmit }"
+                :onSubmit="userLogin"
+                v-slot="{ handleSubmit }"
         >
             <div class="mb-3">
                 <label class="form-label">Email address</label>
@@ -26,22 +31,37 @@
 <script>
 import Vuemik from "../../lib/Vuemik/Vuemik";
 import Field from "../../lib/Vuemik/Field";
+import {conf} from "../conf";
 
 export default {
     inject: ['setAuth'],
     name: "Form",
     components: {Field, Vuemik},
     data: () => ({
-        user: {email: '', password: ''}
+        user: {email: '', password: ''},
+        isLoading: false
     }),
     methods: {
         userLogin(user) {
-            console.log(user.email);
-            console.log(user.password);
-            this.setAuth(user);
-
-            localStorage.setItem('user', JSON.stringify({token: 'slkdjflkj', email: 'joe@joe.com', role: 'Admin'}))
-            this.$router.push("/home");
+            this.isLoading = true;
+            fetch(`${conf.apiUrl}/authentication_token`, {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    email: user.email,
+                    password: user.password
+                })
+            }).then((resp) => {
+                return resp.json();
+            }).then(data => {
+                console.log(data.token);
+                this.setAuth(data.token);
+                this.isLoading = false;
+                this.$router.push("/");
+            });
         }
     },
 };

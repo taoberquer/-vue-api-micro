@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <Nav :user="user"/>
+        <Nav :token="token"/>
         <router-view class="d-flex justify-content-center align-items-center flex-column w-100 mt-5"></router-view>
     </div>
 </template>
@@ -18,20 +18,20 @@ export default {
     },
     data () {
         return {
-            user: {}
+            token: null
         }
     },
     provide() {
         const provider = {
-            setAuth: (user) => {
-                this.user = user
-                localStorage.setItem('user', JSON.stringify(user))
+            setAuth: (token) => {
+                this.token = token
+                localStorage.setItem('token', JSON.stringify(token))
             },
             apiUrls: this.apiUrls
         }
-        Object.defineProperty(provider, 'user', {
+        Object.defineProperty(provider, 'token', {
             enumerable: true,
-            get: () => this.user,
+            get: () => this.token,
         })
         return provider
     }
