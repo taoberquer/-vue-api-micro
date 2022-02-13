@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\MeController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,7 +24,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'post' => [
             'normalization_context' => ['groups' => ['user:read']],
             'denormalization_context' => ['groups' => ['user:write']],
-        ]
+        ],
+        'me' => [
+            'method' => 'GET',
+            'path' => '/users/me',
+            'controller' => MeController::class,
+            'security' => 'is_granted("IS_AUTHENTICATED_FULLY")',
+            'normalization_context' => ['groups' => ['user:read']],
+        ],
     ],
     itemOperations: [
         'get' => [
