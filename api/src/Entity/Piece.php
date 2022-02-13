@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\CreateMediaObjectAction;
+use App\Controller\CreatePieceAction;
 use App\Repository\PieceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -22,6 +24,7 @@ use ApiPlatform\Core\Annotation\ApiProperty;
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
+            'controller' => CreatePieceAction::class,
             'security' => 'is_granted("ROLE_ADMIN")',
             'denormalization_context' => ['groups' => ['piece:write']],
             'normalization_context' => ['groups' => ['piece:read']]
@@ -52,7 +55,7 @@ class Piece
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     /**
-     * @Groups({"piece:read", "category:read"})
+     * @Groups({"piece:read", "pieces:read", "category:read"})
      */
     private $id;
 
@@ -96,7 +99,7 @@ class Piece
     /**
      * @Groups({"piece:read", "piece:write", "pieces:read", "category:read"})
      */
-    private $sale;
+    private $sold;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'pieces')]
     #[ORM\JoinColumn(nullable: false)]
@@ -215,14 +218,14 @@ class Piece
         return $this;
     }
 
-    public function getSale(): ?bool
+    public function getSold(): ?bool
     {
         return $this->sale;
     }
 
-    public function setSale(bool $sale): self
+    public function setSold(bool $sold): self
     {
-        $this->sale = $sale;
+        $this->sale = $sold;
 
         return $this;
     }
