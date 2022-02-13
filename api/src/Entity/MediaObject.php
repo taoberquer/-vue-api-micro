@@ -40,6 +40,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         ],
     ], itemOperations: ['get'], normalizationContext: ['groups' => ['media_object:read']]
 )]
+/**
+ * @Vich\Uploadable
+ */
 class MediaObject
 {
     #[ORM\Id]
@@ -50,15 +53,14 @@ class MediaObject
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
 
+    #[Vich\UploadableField(mapping: 'media_object', fileNameProperty: 'filePath')]
+    #[Assert\NotNull(groups: ['media_object_create'])]
     /**
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
-    #[Assert\NotNull(groups: ['media_object_create'])]
     public ?File $file = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
 
     public function getId(): ?int
