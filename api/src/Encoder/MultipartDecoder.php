@@ -32,9 +32,10 @@ final class MultipartDecoder implements DecoderInterface
                 if (is_bool($decoded)) {
                     return (bool) $decoded;
                 }
-
+                ;
                 return \is_array($decoded) ? $decoded : $element;
             }, $request->request->all()) + $request->files->all();
+
         return $decoded;
     }
 

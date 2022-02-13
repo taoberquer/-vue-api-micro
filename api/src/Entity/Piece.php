@@ -108,9 +108,9 @@ class Piece
     public ?string $contentUrl = null;
 
     /**
-     * @Vich\UploadableField(mapping="piece", fileNameProperty="filePath")
+     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
-    #[Vich\UploadableField(mapping: "piece", fileNameProperty: "filePath")]
+    #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "filePath")]
     #[Assert\NotNull(groups: ['piece:write'])]
     /**
      * @Groups ({"piece:write"})
