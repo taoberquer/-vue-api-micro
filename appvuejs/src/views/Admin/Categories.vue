@@ -73,7 +73,7 @@ export default {
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${}`
+                //"Authorization": `Bearer ${}`
             },
             method: "GET"
         }).then((resp) => {
