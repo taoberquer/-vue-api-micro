@@ -1,17 +1,25 @@
 <template>
-    <div style="width: 80%">
+    <div class="panel-body flex" style="flex-direction: row !important;">
         <Card>
-            <template v-slot:header>
-                {{ item.title }}
+            <template v-slot:img>
+                <!--<img :src="item.thumbnail" />-->
+                <img src="../assets/test.png" contain height="600" />
             </template>
-            <template v-slot:content>
-                {{ item.content }}
-                <div @click="showDetails(item.id)" class="btn btn-primary">View details</div>
+            <template v-slot:infos>
+                <div class="ml-5" style="max-width: 300px;">
+                    <div class="mb-5">
+                        <h4>{{ item.title }}</h4>
+                        <p class="mb-4">{{ item.price }} €</p>
+                        <p class="mb-4">{{ item.description }}</p>
+                        <p><span class="font-weight-bold">Color : </span></p>
+                    </div>
+                    <p><span class="font-weight-bold">Size : </span></p>
+                    <div>
+                        <button class="btn btn-primary">Add to cart</button>
+                    </div>
+                </div>
             </template>
         </Card>
-
-        <div>{{ item.description }}</div>
-        <div class="btn btn-primary" @click="showCategories(item.category)">See other items of <b>{{ item.category }}</b></div>
     </div>
 
 </template>
@@ -26,14 +34,11 @@ export default {
     data() {
         return {
             item: {
-                title: 'My title',
-                quality: 'good',
-                color: 'red',
-                size: 'XL',
-                damage: null,
-                description: 'What is Lorem Ipsum?\n' +
-                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-                category: 'T-shirt'
+                id:"sldkjflksdjflksjd",
+                title: "T-shirt",
+                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id lacus in nisl semper consectetur.",
+                thumbnail: "../assets/logo.png",
+                price: "10",
             },
             isMounted: false
         }

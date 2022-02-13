@@ -4,6 +4,9 @@
         <router-view class="d-flex justify-content-center align-items-center flex-column w-100 mt-5"></router-view>
     </div>
 </template>
+<style>
+    @import './assets/app.css';
+</style>
 
 <script>
 import Nav from './components/Nav.vue';
