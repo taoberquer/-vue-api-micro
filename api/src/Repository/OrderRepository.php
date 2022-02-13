@@ -19,7 +19,7 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-    public function createOrder($user, $pieces, $address, $city, $zip_code)
+    public function createOrder($user, $pieces, $address, $city, $zip_code, $total)
     {
         $order = new Order();
         $order->setStatus('En attente');
@@ -30,6 +30,7 @@ class OrderRepository extends ServiceEntityRepository
         $order->setAddress($address);
         $order->setCity($city);
         $order->setZipCode($zip_code);
+        $order->setCredits($total);
         $this->getEntityManager()->persist($order);
         $this->getEntityManager()->flush();
     }

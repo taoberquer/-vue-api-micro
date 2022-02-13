@@ -26,13 +26,18 @@ class ConfirmOrderController extends AbstractController
         if (! $pieceRepository->areAvailables($decoded['piece_ids']))
             return new Response('Some product are not available', 400);
 
+        if ($this->getUser()->getCredits() < count($decoded['piece_ids'])) {
+            return new Response('Not enough credits', 400);
+        }
+
         $pieceRepository->setSoldPieces($decoded['piece_ids']);
         $orderRepository->createOrder(
             $this->getUser(),
             $pieceRepository->findBy(['id' => $decoded['piece_ids']]),
             $decoded['address'],
             $decoded['zip_code'],
-            $decoded['city']
+            $decoded['city'],
+            count($decoded['piece_ids'])
         );
 
 

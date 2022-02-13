@@ -98,6 +98,9 @@ class Order
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 
+    #[ORM\Column(type: 'integer')]
+    private $credits;
+
     public function __construct()
     {
         $this->pieces = new ArrayCollection();
@@ -194,6 +197,18 @@ class Order
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCredits(): ?int
+    {
+        return $this->credits;
+    }
+
+    public function setCredits(int $credits): self
+    {
+        $this->credits = $credits;
 
         return $this;
     }
