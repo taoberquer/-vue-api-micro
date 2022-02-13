@@ -1,0 +1,15 @@
+version: "3.6"
+services:
+  app:
+    build:
+      context: ./docker
+    image: "laravelapp"
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www/html
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
