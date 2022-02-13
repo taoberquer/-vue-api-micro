@@ -5,10 +5,14 @@
             <Card class="col-2 m-2 flex-column" v-for="item in items" :key="item.id">
                 <template v-slot:img>
                     <!--<img :src="item.thumbnail" />-->
-                    <img class="pointer" @click="showDetails(item.id)" src="../assets/test.png" contain height="300"/>
+                    <img v-if="!item.sold" class="pointer" @click="showDetails(item.id)" :src="getImgUrl(item.filePath)" height="300"/>
+                    <img v-else style="opacity: 0.5" :src="getImgUrl(item.filePath)" height="300"/>
                 </template>
                 <template v-slot:infos>
-                    <h5 style="max-width: fit-content;">{{ item.title }}</h5>
+                    <h5 style="max-width: fit-content;">
+                        {{ item.title }}
+                        <span class="ml-2" style="color: red;" v-if="item.sold">SOLD</span>
+                    </h5>
                 </template>
             </Card>
         </div>
@@ -51,7 +55,6 @@ export default {
                 return resp.json();
             })
                 .then((data) => {
-                    console.log(data);
                     this.items = data;
                     this.setLoading(false);
                 })
@@ -61,7 +64,10 @@ export default {
         },
         showDetails(id) {
             this.$router.push(`/items/${id}`);
-        }
+        },
+        getImgUrl(filePath) {
+            return conf.apiUrl + filePath;
+        },
     },
 };
 </script>

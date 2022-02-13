@@ -13,6 +13,7 @@ export default createRouter({
     {path: "/admin/", component: () => import("../views/Admin/Admin.vue")},
     {path: "/admin/donations", component: () => import("../views/Admin/Admin.vue")},
     {path: "/admin/categories", component: () => import("../views/Admin/Categories.vue")},
+    {path: "/payment", component: () => import("../views/Payment.vue")},
   ],
 });
 

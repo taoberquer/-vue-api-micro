@@ -13,4 +13,5 @@
 |
 */
 
-$router->post('orders/confirm' ,'MainController@confirmOrder');
+
+$router->post('/donation/confirm/' ,'MainController@confirmDonation');

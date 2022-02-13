@@ -55,6 +55,7 @@ export default {
                 this.setLoading(false);
                 this.$router.push("/");
             });
+            localStorage.setItem('cart', JSON.stringify([]));
         }
     },
 };

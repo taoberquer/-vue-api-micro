@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\ConfirmDonationController;
+use App\Controller\DonationController;
+use App\Controller\CreateDonationController;
 use App\Repository\DonationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,6 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'security' => 'is_granted("ROLE_ADMIN")',
         ],
         'post' => [
+            'controller' => CreateDonationController::class,
             'denormalization_context' => ['groups' => ['donation:write']],
             'normalization_context' => ['groups' => ['donation:read']],
         ],
@@ -61,7 +64,7 @@ class Donation
 
     #[ORM\ManyToMany(targetEntity: Category::class)]
     /**
-     * @Groups ({"donation:read"})
+     * @Groups ({"donation:read", "donation:write"})
      */
     private $Categories;
 
@@ -73,7 +76,7 @@ class Donation
     /**
      * @Groups ({"donation:read", "donations:read"})
      */
-    private $status;
+    private $status = "pending";
 
     public function __construct()
     {

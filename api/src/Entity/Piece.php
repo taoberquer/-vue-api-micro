@@ -125,6 +125,7 @@ class Piece
 
     /**
      * @ORM\Column(nullable=true)
+     * @Groups ({"piece:read", "pieces:read"})
      */
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;

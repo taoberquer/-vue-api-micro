@@ -25,7 +25,7 @@ class CreatePieceAction extends AbstractController
         }
         $filename = $fileUploader->upload($file);
         $piece->file = $file;
-        $piece->filePath = '/upload/' . $filename;
+        $piece->filePath = '/uploads/' . $filename;
 
         return $piece;
     }

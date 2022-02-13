@@ -24,6 +24,42 @@
                         </li>
                     </div>
                     <div class="d-flex">
+                        <li class="align-self-center mr-2" v-if="cart.length > 0 && this.token">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cart-modal">
+                                Cart ({{ cart.length }})
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="cart-modal" tabindex="-1" aria-labelledby="cart-modal" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Your cart</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                    <tr v-for="item in cart" :key="item.id">
+                                                        <td class="align-middle"><img src="../assets/test.png" height="150" alt="{{ item.description }}"></td>
+                                                        <td class="align-middle">{{ item.title }}</td>
+                                                        <td class="align-middle">{{ 1 }} credits</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="align-middle font-weight-bold">{{ cart.length }} credits</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div data-bs-dismiss="modal" class="modal-footer">
+                                            <router-link class="btn btn-primary" to="/payment">Go to payment</router-link>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
                         <li v-if="!this.token">
                             <router-link class="nav-link" to="/register">Sign Up</router-link>
                         </li>
@@ -41,35 +77,42 @@
 </template>
 
 <script>
+import {conf} from "../conf";
+
 export default {
     data() {
         return {
-            categories: [
-                {
-                    id: 'sldjkflksjdflks',
-                    name: "Shoes",
-                },
-                {
-                    id: 'lskdjflkdsdf',
-                    name: "Trousers",
-                },
-                {
-                    id: 'lskdjfdlksdf',
-                    name: "T-shirts",
-                },
-                {
-                    id: 'lsdkdjflksdf',
-                    name: "Sweat",
-                },
-            ]
+            categories: [],
         }
     },
     inject: ['setAuth'],
     props: {
-        token: null
+        token: null,
+        cart: null,
     },
     name: 'Nav',
+    created() {
+        this.getCategories();
+    },
     methods: {
+        getCategories() {
+            fetch(`${conf.apiUrl}/categories`, {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                },
+                method: "GET",
+            }).then((resp) => {
+                return resp.json();
+            })
+                .then((data) => {
+                    this.categories = data;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
         logout() {
             localStorage.removeItem('token');
             this.setAuth(null);

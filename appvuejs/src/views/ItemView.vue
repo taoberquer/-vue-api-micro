@@ -2,8 +2,7 @@
     <div class="panel-body flex" style="flex-direction: row !important;">
         <Card>
             <template v-slot:img>
-                <!--<img :src="item.thumbnail" />-->
-                <img src="../assets/test.png" contain height="600"  alt="{{ item.description }}"/>
+                <img :src="getImgUrl(item.filePath)" height="600"  alt="{{ item.description }}"/>
             </template>
             <template v-slot:infos>
                 <div class="ml-5" style="max-width: 300px;">
@@ -14,7 +13,9 @@
                         <p><span class="font-weight-bold">Size : </span>{{ item.size }}</p>
                     </div>
                     <div>
-                        <button class="btn btn-primary">Add to cart</button>
+                        <button v-if="this.cartContains(item.id) === false" @click="this.addToCart(item.id)" class="btn btn-primary">Add to cart</button>
+                        <button v-else class="btn btn-default disabled">Added to cart</button>
+                        <button v-if="this.cartContains(item.id) === true" @click="this.removeFromCart(item.id)" class="btn btn-danger">Remove from cart</button>
                     </div>
                 </div>
             </template>
@@ -28,7 +29,7 @@ import Card from "../components/Card";
 import {conf} from "../conf";
 
 export default {
-    inject: ['setLoading'],
+    inject: ['setLoading', 'addToCart', 'removeFromCart', 'cartContains'],
     components: {
         Card,
     },
@@ -62,6 +63,9 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
+        },
+        getImgUrl(filePath) {
+            return conf.apiUrl + filePath;
         },
     }
 };

@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <Nav :token="token"/>
+        <Nav :token="token" :cart="cart"/>
         <div v-if="isLoading === true" class="d-flex justify-content-center mt-5">
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -27,6 +27,7 @@ export default {
         return {
             token: localStorage.getItem('token'),
             isLoading: false,
+            cart: JSON.parse(localStorage.getItem('cart')) || [],
         }
     },
     provide() {
@@ -38,7 +39,10 @@ export default {
             setLoading: (isLoading) => {
                 this.isLoading = isLoading
             },
-            apiUrls: this.apiUrls
+            apiUrls: this.apiUrls,
+            addToCart: this.addToCart,
+            removeFromCart: this.removeFromCart,
+            cartContains: this.cartContains,
         }
         Object.defineProperty(provider, 'token', {
             enumerable: true,
@@ -49,7 +53,23 @@ export default {
             get: () => this.isLoading,
         })
         return provider
-    }
+    },
+    methods: {
+        addToCart(id) {
+            this.cart.push(id);
+            this.saveCart();
+        },
+        removeFromCart(id) {
+            this.cart.splice(this.cart.indexOf(id), 1);
+            this.saveCart();
+        },
+        cartContains(id) {
+            return this.cart.includes(id);
+        },
+        saveCart() {
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+        },
+    },
 }
 </script>
 

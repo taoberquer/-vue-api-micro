@@ -3,14 +3,20 @@
 namespace App\Controller;
 
 use App\Repository\DonationRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ConfirmDonationController extends AbstractController
 {
+    protected  $client;
+    public function __construct(HttpClientInterface $client)
+    {
+        $this->client = $client;
+    }
+
     public function __invoke($id, EntityManagerInterface $entityManager, Request $request, DonationRepository $donationRepository)
     {
         $donation = $donationRepository->find($id);
@@ -25,6 +31,12 @@ class ConfirmDonationController extends AbstractController
         $user->setCredits($user->getCredits() + $credits);
         $donation->setStatus('confirmed');
         $entityManager->flush();
+
+        $this->client->request(
+            'POST',
+            $_ENV['MAIL_SERVICE'] . '/donation/confirm',
+            ['body' => ['email' => 'tao.berquer@gmail.com']]
+        );
 
         return new Response('Donation confirmed', 200);
 
