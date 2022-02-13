@@ -87,6 +87,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $donations;
 
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups ({"user:read"})
+     */
     private $credits;
 
     public function __construct()
