@@ -29,6 +29,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'security' => 'is_granted("ROLE_USER")',
             'normalization_context' => ['groups' => ['orders:read']],
         ],
+        'confirm' => [
+            'method' => 'POST',
+            'path' => '/orders/confirm',
+            'denormalization_context' => ['groups' => ['order:write']],
+            'normalization_context' => ['groups' => ['order:read']],
+        ],
     ],
     itemOperations: [
         'get' => [

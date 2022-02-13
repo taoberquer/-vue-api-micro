@@ -78,6 +78,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Donation::class)]
     private $donations;
 
+    #[ORM\Column(type: 'integer')]
+    private $credits;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -227,6 +230,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $donation->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCredits(): ?int
+    {
+        return $this->credits;
+    }
+
+    public function setCredits(int $credits): self
+    {
+        $this->credits = $credits;
 
         return $this;
     }

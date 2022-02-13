@@ -129,6 +129,9 @@ class Piece
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
 
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'pieces')]
+    private $order_from;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -238,6 +241,18 @@ class Piece
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getOrderFrom(): ?Order
+    {
+        return $this->order_from;
+    }
+
+    public function setOrderFrom(?Order $order_from): self
+    {
+        $this->order_from = $order_from;
 
         return $this;
     }

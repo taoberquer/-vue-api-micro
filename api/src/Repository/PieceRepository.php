@@ -19,6 +19,29 @@ class PieceRepository extends ServiceEntityRepository
         parent::__construct($registry, Piece::class);
     }
 
+    public function areAvailables(array $ids): bool
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('COUNT(p.id)')
+            ->where('p.id IN (:ids)')
+            ->andWhere('p.sold = 0')
+            ->setParameter('ids', $ids);
+        $count = $qb->getQuery()->getSingleScalarResult();
+
+        return $count === count($ids);
+    }
+
+    public function setSoldPieces(array $ids): void
+    {
+        $qb = $this->createQueryBuilder('o');
+        $qb->update('App\Entity\Piece', 'o')
+            ->set('o.sold', ':sold')
+            ->where('o.id IN (:ids)')
+            ->setParameter('sold', 1)
+            ->setParameter('ids', $ids);
+        $qb->getQuery()->execute();
+    }
+
     // /**
     //  * @return Piece[] Returns an array of Piece objects
     //  */

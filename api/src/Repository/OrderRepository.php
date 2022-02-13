@@ -19,6 +19,21 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
+    public function createOrder($user, $pieces, $address, $city, $zip_code)
+    {
+        $order = new Order();
+        $order->setStatus('En attente');
+        $order->setUser($user);
+        foreach ($pieces as $piece) {
+            $order->addPiece($piece);
+        }
+        $order->setAddress($address);
+        $order->setCity($city);
+        $order->setZipCode($zip_code);
+        $this->getEntityManager()->persist($order);
+        $this->getEntityManager()->flush();
+    }
+
     // /**
     //  * @return Order[] Returns an array of Order objects
     //  */
