@@ -56,6 +56,9 @@ class Category
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Piece::class)]
+    /**
+     * @Groups ({"category:read"})
+     */
     private $pieces;
 
     public function __construct()

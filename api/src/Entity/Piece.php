@@ -43,13 +43,16 @@ use ApiPlatform\Core\Annotation\ApiProperty;
     denormalizationContext: ['groups' => ['piece:write']],
     normalizationContext: ['groups' => ['piece:read', 'pieces:read']],
 )]
+/**
+ * @Vich\Uploadable
+ */
 class Piece
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     /**
-     * @Groups({"piece:read"})
+     * @Groups({"piece:read", "category:read"})
      */
     private $id;
 
@@ -79,7 +82,7 @@ class Piece
 
     #[ORM\Column(type: 'string', length: 255)]
     /**
-     * @Groups({"piece:read", "piece:write", "pieces:read"})
+     * @Groups({"piece:read", "piece:write", "pieces:read", "category:read"})
      */
     private $title;
 
@@ -91,7 +94,7 @@ class Piece
 
     #[ORM\Column(type: 'boolean')]
     /**
-     * @Groups({"piece:read", "piece:write", "pieces:read"})
+     * @Groups({"piece:read", "piece:write", "pieces:read", "category:read"})
      */
     private $sale;
 
@@ -103,7 +106,7 @@ class Piece
     private $category;
 
     /**
-     * @Groups ({"piece:read"})
+     * @Groups ({"piece:read", "category:read"})
      */
     public ?string $contentUrl = null;
 
