@@ -38,10 +38,7 @@
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li v-for="cat in categories" :key="cat.id">
-                                        <a class="dropdown-item pointer"
-                                           @click="getCategory(cat.name)">
-                                            {{ cat.name }}
-                                        </a>
+                                        <router-link class="nav-link" :to="`/categories/${cat.name}`">{{ cat.name }}</router-link>
                                     </li>
                                 </ul>
                             </div>

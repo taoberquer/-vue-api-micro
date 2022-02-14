@@ -1,59 +1,63 @@
 <template>
     <div class="w-100">
+        <div v-if="errorMessage" class="alert alert-warning" role="alert">
+            {{ errorMessage }}
+        </div>
         <h1 class="mb-3">Donations</h1>
         <div v-if="donations.length > 0" class="w-100 d-flex align-items-center flex-column">
             <table class="table table-striped w-75">
                 <thead>
                 <tr>
-                    <th scope="col">Name</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="donation in donations" :key="donation.id">
-                    <td>{{ donation.name }}</td>
+                    <td>{{ donation.user.email }}</td>
+                    <td>{{ donation.status }}</td>
                     <td>
-                        <button @click="showModal(donation)" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        <button @click="setModalData(donation)" type="button" class="btn btn-primary"
+                                data-bs-toggle="modal"
                                 :data-bs-target="`#modal`">
-                            Update
+                            Validate
                         </button>
                     </td>
                 </tr>
                 </tbody>
             </table>
-            <button @click="showModal(null)" type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    :data-bs-target="`#modal`">
-                Create
-            </button>
 
             <div :id="`modal`" class="modal" tabindex="-1">
                 <div class="modal-dialog">
+
                     <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ modalData.name }}</h5>
+                            <button @click="resetModalData" type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"/>
+                        </div>
                         <Vuemik
                             :initialValues="{
-                          name: ope === 'update' ? modalData.name : '',
-                        }"
-                            :onSubmit="ope == 'update' ? updateDon : createDon"
+                              name: ope === 'update' ? modalData.name : '',
+                            }"
+                            :onSubmit="confirmDonation"
                             v-slot="{ handleSubmit }"
                         >
-                            <div class="modal-header">
-                                <h5 class="modal-title">{{ modalData.name }}</h5>
-                                <button @click="resetModalData" type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
                             <div class="modal-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Name</label>
-                                    <Field name="name" component="input" class="form-control"/>
-                                </div>
+                                <p>Validate the donation ?</p>
+                                <label class="form-label">Credits</label>
+                                <Field class="col" component="input" name="credits" type="number"/>
                             </div>
+
                             <div class="modal-footer">
                                 <button @click="resetModalData" type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close
                                 </button>
-                                <Field data-bs-dismiss="modal" class="btn btn-primary" value="Save" name="submit"
+                                <Field data-bs-dismiss="modal" class="btn btn-primary" name="submit"
                                        component="input" type="submit"
-                                       @click="handleSubmit"/>
+                                       @click="handleSubmit">Save
+                                </Field>
                             </div>
                         </Vuemik>
                     </div>
@@ -80,6 +84,7 @@ export default {
             modalData: {},
             modalShowed: false,
             ope: '',
+            errorMessage: null,
         }
     },
     beforeMount() {
@@ -87,34 +92,12 @@ export default {
         this.fetchDonations();
     },
     methods: {
-        showModal(cat) {
-            this.ope = cat == null ? 'create' : 'update';
-            this.modalData = cat;
-        },
         closeModal() {
             this.modalData = null;
         },
-        updateDon(data) {
+        confirmDonation(data) {
             this.setLoading(true);
-            fetch(`${conf.apiUrl}/donations/${this.modalData.id}`, {
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem('token')}`
-                },
-                method: "PUT",
-                body: JSON.stringify(data)
-            }).then((resp) => {
-                return resp.json();
-            }).then(() => {
-                this.fetchCategories();
-            }).catch((err) => {
-                console.log(err);
-            });
-        },
-        createDon(data) {
-            this.setLoading(true);
-            fetch(`${conf.apiUrl}/donations`, {
+            fetch(`${conf.apiUrl}/donations/${this.modalData.id}/confirm`, {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
@@ -123,10 +106,13 @@ export default {
                 method: "POST",
                 body: JSON.stringify(data)
             }).then((resp) => {
+                this.modalData = {};
                 return resp.json();
             }).then(() => {
                 this.fetchCategories();
             }).catch((err) => {
+                this.setLoading(false);
+                this.errorMessage = 'An error occured';
                 console.log(err);
             });
         },
@@ -144,10 +130,18 @@ export default {
             }).then(data => {
                 this.donations = data;
                 this.setLoading(false);
+            }).catch((err) => {
+                console.log("plouf")
+                this.setLoading(false);
+                this.errorMessage = "An error occured..."
+                console.log(err);
             });
         },
         resetModalData() {
             this.modalData = {};
+        },
+        setModalData(donation) {
+            this.modalData = donation;
         },
         fetchDonations() {
             this.setLoading(true);
@@ -164,6 +158,10 @@ export default {
                 console.log(data)
                 this.donations = data;
                 this.setLoading(false);
+            }).catch((err) => {
+                this.setLoading(false);
+                this.errorMessage = "An error occured..."
+                console.log(err);
             });
         }
     }
