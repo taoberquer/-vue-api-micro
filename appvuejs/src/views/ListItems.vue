@@ -47,8 +47,8 @@ export default {
     },
     methods: {
         getItems() {
-            if (this.$route.query.id) {
-                fetch(`${conf.apiUrl}/categories/${this.$route.query.id}`, {
+            if (this.$route.params.id) {
+                fetch(`${conf.apiUrl}/categories/${this.$route.params.id}`, {
                     headers: {
                         "Accept": "application/json",
                         "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export default {
                 }).then((resp) => {
                     return resp.json();
                 }).then(data => {
-                    this.items = data.items;
+                    this.items = data.pieces;
                     this.setLoading(false);
                 }).catch((err) => {
                     this.setLoading(false);
