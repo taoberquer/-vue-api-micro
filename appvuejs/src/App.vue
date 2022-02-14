@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <Nav :token="token" :cart="cart"/>
+        <Nav :token="token" :cart="cart" />
         <div v-if="isLoading === true" class="d-flex justify-content-center mt-5">
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -17,6 +17,7 @@
 
 <script>
 import Nav from './components/Nav.vue';
+import {conf} from "./conf";
 
 export default {
     name: 'App',
@@ -38,6 +39,9 @@ export default {
             },
             setLoading: (isLoading) => {
                 this.isLoading = isLoading
+            },
+            getImgUrl: (filePath) => {
+                return conf.apiUrl + filePath
             },
             apiUrls: this.apiUrls,
             addToCart: this.addToCart,

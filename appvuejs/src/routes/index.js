@@ -14,6 +14,7 @@ export default createRouter({
     {path: "/admin/categories", component: () => import("../views/Admin/Categories.vue")},
     {path: "/payment", component: () => import("../views/Payment.vue")},
     {path: "/admin/pieces", component: () => import("../views/Admin/Pieces.vue")},
+    {path: "/payment/confirmation", component: () => import("../views/PaymentConfirmation.vue")},
   ],
 });
 

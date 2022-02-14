@@ -47,7 +47,6 @@ export default {
     }),
     mounted() {
         this.getUser();
-        console.log(this.cart);
     },
     methods: {
         sendPayment(proxy) {
@@ -67,7 +66,6 @@ export default {
                 body: JSON.stringify(data),
             };
             fetch(conf.apiUrl + '/orders/confirm', requestOptions)
-                .then(response => response.json())
                 .then(data => {
                     if (data.error) {
                         this.errorMessage = data.error;

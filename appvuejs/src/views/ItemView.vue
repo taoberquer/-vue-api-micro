@@ -2,7 +2,7 @@
     <div class="panel-body flex" style="flex-direction: row !important;">
         <Card>
             <template v-slot:img>
-                <img :src="getImgUrl(item.filePath)" height="600"  alt="{{ item.description }}"/>
+                <img :src="this.getImgUrl(item.filePath)" height="600"  alt="{{ item.description }}"/>
             </template>
             <template v-slot:infos>
                 <div class="ml-5" style="max-width: 300px;">
@@ -29,7 +29,7 @@ import Card from "../components/Card";
 import {conf} from "../conf";
 
 export default {
-    inject: ['setLoading', 'addToCart', 'removeFromCart', 'cartContains'],
+    inject: ['setLoading', 'addToCart', 'removeFromCart', 'cartContains', 'getImgUrl'],
     components: {
         Card,
     },
@@ -63,9 +63,6 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
-        },
-        getImgUrl(filePath) {
-            return conf.apiUrl + filePath;
         },
     }
 };

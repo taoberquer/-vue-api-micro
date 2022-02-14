@@ -48,7 +48,7 @@
                         </li>
                     </div>
                     <div class="d-flex">
-                        <li class="align-self-center mr-2" v-if="cart.length > 0 && this.token">
+                        <li class="align-self-center mr-2" v-show="cart.length > 0 && this.token">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cart-modal">
                                 Cart ({{ cart.length }})
                             </button>
@@ -64,8 +64,8 @@
                                         <div class="modal-body">
                                             <table class="table table-borderless">
                                                 <tbody>
-                                                    <tr v-for="item in cart" :key="item.id">
-                                                        <td class="align-middle"><img src="../assets/test.png" height="150" alt="{{ item.description }}"></td>
+                                                    <tr v-for="item in cartItems" :key="item.id">
+                                                        <td class="align-middle"><img :src="this.getImgUrl(item.filePath)" height="150" alt="{{ item.description }}"/></td>
                                                         <td class="align-middle">{{ item.title }}</td>
                                                         <td class="align-middle">{{ 1 }} credits</td>
                                                     </tr>
@@ -109,7 +109,7 @@ export default {
             categories: [],
         }
     },
-    inject: ['setAuth'],
+    inject: ['setAuth', 'getImgUrl', 'setLoading', 'removeFromCart'],
     props: {
         token: null,
         cart: null,
@@ -122,7 +122,31 @@ export default {
         },
         getCategory(name) {
             this.$router.push(`/categories/${name.toLowerCase()}`);
-        }
+        },
+        getCartItems() {
+            this.setLoading(true);
+            let cartItems = [];
+            for (let item of this.cart) {
+                fetch(`${conf.apiUrl}/pieces/${item}`, {
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    method: "GET",
+                }).then((resp) => {
+                    return resp.json();
+                })
+                .then((data) => {
+                    cartItems.push(data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            }
+            this.setLoading(false);
+            return cartItems;
+        },
     },
     mounted() {
         fetch(`${conf.apiUrl}/categories?page=1`, {
@@ -137,6 +161,11 @@ export default {
         }).then(data => {
             this.categories = data;
         });
+    },
+    computed: {
+        cartItems() {
+            return this.getCartItems();
+        },
     }
 };
 </script>
