@@ -1,5 +1,8 @@
 <template>
     <div class="panel">
+        <div v-if="errorMessage" class="alert alert-warning" role="alert">
+            {{ errorMessage }}
+        </div>
         <div class="separator mb-2">{{ nbItems }} items found</div>
         <div v-if="this.nbItems > 0" class="panel-body row justify-content-center">
             <Card class="col-2 m-2 flex-column" v-for="item in items" :key="item.id">
@@ -31,6 +34,7 @@ export default {
     data() {
         return {
             items: [],
+            errorMessage: null
         };
     },
     computed: {
@@ -59,6 +63,8 @@ export default {
                     this.setLoading(false);
                 })
                 .catch((err) => {
+                    this.setLoading(false);
+                    this.errorMessage = "An error occured...";
                     console.log(err);
                 });
         },

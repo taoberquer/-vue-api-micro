@@ -1,7 +1,7 @@
 <template>
     <div class="w-100">
-        <h1 class="mb-3">Categories</h1>
-        <div v-if="categories.length > 0" class="w-100 d-flex align-items-center flex-column">
+        <h1 class="mb-3">Donations</h1>
+        <div v-if="donations.length > 0" class="w-100 d-flex align-items-center flex-column">
             <table class="table table-striped w-75">
                 <thead>
                 <tr>
@@ -10,10 +10,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="cat in categories" :key="cat.id">
-                    <td>{{ cat.name }}</td>
+                <tr v-for="donation in donations" :key="donation.id">
+                    <td>{{ donation.name }}</td>
                     <td>
-                        <button @click="showModal(cat)" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        <button @click="showModal(donation)" type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 :data-bs-target="`#modal`">
                             Update
                         </button>
@@ -33,7 +33,7 @@
                             :initialValues="{
                           name: ope === 'update' ? modalData.name : '',
                         }"
-                            :onSubmit="ope == 'update' ? updateCat : createCat"
+                            :onSubmit="ope == 'update' ? updateDon : createDon"
                             v-slot="{ handleSubmit }"
                         >
                             <div class="modal-header">
@@ -76,7 +76,7 @@ export default {
     },
     data() {
         return {
-            categories: [],
+            donations: [],
             modalData: {},
             modalShowed: false,
             ope: '',
@@ -84,6 +84,7 @@ export default {
     },
     beforeMount() {
         this.fetchCategories();
+        this.fetchDonations();
     },
     methods: {
         showModal(cat) {
@@ -93,9 +94,9 @@ export default {
         closeModal() {
             this.modalData = null;
         },
-        updateCat(data) {
+        updateDon(data) {
             this.setLoading(true);
-            fetch(`${conf.apiUrl}/categories/${this.modalData.id}`, {
+            fetch(`${conf.apiUrl}/donations/${this.modalData.id}`, {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
@@ -111,9 +112,9 @@ export default {
                 console.log(err);
             });
         },
-        createCat(data) {
+        createDon(data) {
             this.setLoading(true);
-            fetch(`${conf.apiUrl}/categories`, {
+            fetch(`${conf.apiUrl}/donations`, {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
@@ -131,7 +132,7 @@ export default {
         },
         fetchCategories() {
             this.setLoading(true);
-            fetch(`${conf.apiUrl}/categories?page=1`, {
+            fetch(`${conf.apiUrl}/donations?page=1`, {
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
@@ -141,12 +142,29 @@ export default {
             }).then((resp) => {
                 return resp.json();
             }).then(data => {
-                this.categories = data;
+                this.donations = data;
                 this.setLoading(false);
             });
         },
         resetModalData() {
             this.modalData = {};
+        },
+        fetchDonations() {
+            this.setLoading(true);
+            fetch(`${conf.apiUrl}/donations?page=1`, {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`
+                },
+                method: "GET"
+            }).then((resp) => {
+                return resp.json();
+            }).then(data => {
+                console.log(data)
+                this.donations = data;
+                this.setLoading(false);
+            });
         }
     }
 }

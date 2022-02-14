@@ -8,17 +8,41 @@
                             <router-link class="nav-link" to="/">Home</router-link>
                         </li>
                         <li>
-                            <router-link class="nav-link" to="/admin/">Admin</router-link>
+                            <div class="dropdown">
+                                <button class="nav-link dropdown-toggle dropdown-nav pointer" type="button"
+                                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li>
+                                        <router-link class="nav-link" to="/admin/donations">Donations</router-link>
+                                    </li>
+                                    <li>
+                                        <router-link class="nav-link" to="/admin/categories">Categories</router-link>
+                                    </li>
+                                    <li>
+                                        <router-link class="nav-link" to="/admin/pieces">Pieces</router-link>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
                         <li v-if="this.token">
                             <div class="dropdown">
-                                <button class="nav-link dropdown-toggle dropdown-nav pointer" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="nav-link dropdown-toggle dropdown-nav pointer" type="button"
+                                        id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                                     Items
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <span class="ml-3 font-weight-bold">Categories</span>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li v-for="cat in categories" :key="cat.id"><a class="dropdown-item pointer" @click="getCategory(cat.name)">{{ cat.name }}</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li v-for="cat in categories" :key="cat.id">
+                                        <a class="dropdown-item pointer"
+                                           @click="getCategory(cat.name)">
+                                            {{ cat.name }}
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -67,7 +91,7 @@
                             <router-link class="nav-link" to="/login">Login</router-link>
                         </li>
                         <li v-if="this.token">
-                            <button type="submit" class="nav-link" @click="logout">Logout</button>
+                            <button type="submit" class="btn btn-secondary" @click="logout">Logout</button>
                         </li>
                     </div>
                 </ul>
@@ -91,28 +115,7 @@ export default {
         cart: null,
     },
     name: 'Nav',
-    created() {
-        this.getCategories();
-    },
     methods: {
-        getCategories() {
-            fetch(`${conf.apiUrl}/categories`, {
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                },
-                method: "GET",
-            }).then((resp) => {
-                return resp.json();
-            })
-                .then((data) => {
-                    this.categories = data;
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        },
         logout() {
             localStorage.removeItem('token');
             this.setAuth(null);
@@ -120,6 +123,20 @@ export default {
         getCategory(name) {
             this.$router.push(`/categories/${name.toLowerCase()}`);
         }
+    },
+    mounted() {
+        fetch(`${conf.apiUrl}/categories?page=1`, {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('token')}`
+            },
+            method: "GET"
+        }).then((resp) => {
+            return resp.json();
+        }).then(data => {
+            this.categories = data;
+        });
     }
 };
 </script>

@@ -70,6 +70,9 @@ class Donation
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'donations')]
     #[ORM\JoinColumn(nullable: false)]
+    /**
+     * @Groups ({"donation:read", "donations:read"})
+     */
     private $user;
 
     #[ORM\Column(type: 'string', length: 255)]

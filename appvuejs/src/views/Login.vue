@@ -2,12 +2,12 @@
     <div>
         <h3>Login</h3>
         <Vuemik
-                :initialValues="{
+            :initialValues="{
           email: user.email,
           password: user.password,
         }"
-                :onSubmit="userLogin"
-                v-slot="{ handleSubmit }"
+            :onSubmit="userLogin"
+            v-slot="{ handleSubmit }"
         >
             <div class="mb-3">
                 <label class="form-label">Email address</label>
@@ -54,7 +54,11 @@ export default {
                 this.setAuth(data.token);
                 this.setLoading(false);
                 this.$router.push("/");
-            });
+            })
+                .catch((err) => {
+                    this.setLoading(false);
+                    console.log(err);
+                });
             localStorage.setItem('cart', JSON.stringify([]));
         }
     },
