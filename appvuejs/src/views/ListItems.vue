@@ -42,11 +42,32 @@ export default {
             return this.items.length;
         },
     },
-    created() {
+    mounted() {
         this.getItems();
     },
     methods: {
         getItems() {
+            if (this.$route.params.id) {
+                fetch(`${conf.apiUrl}/categories/${this.$route.params.id}`, {
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem('token')}`
+                    },
+                    method: "GET"
+                }).then((resp) => {
+                    return resp.json();
+                }).then(data => {
+                    this.items = data.pieces;
+                    this.setLoading(false);
+                }).catch((err) => {
+                    this.setLoading(false);
+                    console.log(err);
+                });
+
+                return;
+            }
+
             this.setLoading(true);
             fetch(`${conf.apiUrl}/pieces`, {
                 headers: {

@@ -38,7 +38,7 @@
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li v-for="cat in categories" :key="cat.id">
-                                        <router-link class="nav-link" :to="`/categories/${cat.name}`">{{ cat.name }}</router-link>
+                                        <router-link class="nav-link" :to="`/categories/${cat.id}`">{{ cat.name }}</router-link>
                                     </li>
                                 </ul>
                             </div>
