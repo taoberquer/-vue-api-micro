@@ -35,18 +35,16 @@ import Field from "../../lib/Vuemik/Field";
 import {conf} from "../conf.js";
 
 export default {
-    inject: ['setLoading'],
+    inject: ['setLoading', 'getUser'],
     name: "payment",
     components: {Field, Vuemik},
     data: () => ({
         errorMessage: null,
-        user: {
-            credits: 0,
-        },
         cart: JSON.parse(localStorage.getItem('cart')) || [],
+        user: JSON.parse(localStorage.getItem('realUser')) || {},
     }),
     mounted() {
-        this.getUser();
+        console.log(this.user);
     },
     methods: {
         sendPayment(proxy) {
@@ -74,26 +72,6 @@ export default {
                         this.cart = [];
                         localStorage.setItem('cart', JSON.stringify(this.cart));
                     }
-                });
-        },
-        getUser() {
-            this.setLoading(true);
-            fetch(`${conf.apiUrl}/users/me`, {
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                },
-                method: "GET",
-            }).then((resp) => {
-                return resp.json();
-            })
-                .then((data) => {
-                    this.user = data;
-                    this.setLoading(false);
-                })
-                .catch((err) => {
-                    console.log(err);
                 });
         },
     },

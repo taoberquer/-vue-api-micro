@@ -53,13 +53,14 @@ export default {
             }).then(data => {
                 this.setAuth(data.token);
                 this.setLoading(false);
+                localStorage.setItem('cart', JSON.stringify([]));
+                localStorage.setItem('realUser', JSON.stringify([]));
                 this.$router.push("/");
             })
                 .catch((err) => {
                     this.setLoading(false);
                     console.log(err);
                 });
-            localStorage.setItem('cart', JSON.stringify([]));
         }
     },
 };

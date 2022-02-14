@@ -9,7 +9,7 @@
                         </li>
                         <li>
                             <div class="dropdown">
-                                <button class="nav-link dropdown-toggle dropdown-nav pointer" type="button"
+                                <button v-show="user.roles.includes('ROLE_ADMIN')"  class="nav-link dropdown-toggle dropdown-nav pointer" type="button"
                                         id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     Admin
                                 </button>
@@ -104,6 +104,7 @@ export default {
     data() {
         return {
             categories: [],
+            user: JSON.parse(localStorage.getItem('realUser')) || [],
         }
     },
     inject: ['setAuth', 'getImgUrl', 'setLoading', 'removeFromCart'],

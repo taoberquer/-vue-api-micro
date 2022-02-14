@@ -29,6 +29,7 @@ export default {
             token: localStorage.getItem('token'),
             isLoading: false,
             cart: JSON.parse(localStorage.getItem('cart')) || [],
+            user: JSON.parse(localStorage.getItem('realUser')) || [],
         }
     },
     provide() {
@@ -37,9 +38,6 @@ export default {
                 this.token = token
                 localStorage.setItem('token', token)
             },
-            setLoading: (isLoading) => {
-                this.isLoading = isLoading
-            },
             getImgUrl: (filePath) => {
                 return conf.apiUrl + filePath
             },
@@ -47,18 +45,26 @@ export default {
             addToCart: this.addToCart,
             removeFromCart: this.removeFromCart,
             cartContains: this.cartContains,
+            getUser: this.getUser,
+            setLoading: this.setLoading,
         }
         Object.defineProperty(provider, 'token', {
             enumerable: true,
             get: () => this.token,
-        })
+        });
         Object.defineProperty(provider, 'isLoading', {
             enumerable: true,
             get: () => this.isLoading,
-        })
+        });
         return provider
     },
+    created() {
+        this.getUser();
+    },
     methods: {
+        setLoading(isLoading) {
+            this.isLoading = isLoading
+        },
         addToCart(id) {
             this.cart.push(id);
             this.saveCart();
@@ -72,6 +78,26 @@ export default {
         },
         saveCart() {
             localStorage.setItem('cart', JSON.stringify(this.cart));
+        },
+        getUser() {
+            this.setLoading(true);
+            fetch(`${conf.apiUrl}/users/me`, {
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                },
+                method: "GET",
+            }).then((resp) => {
+                return resp.json();
+            })
+                .then((data) => {
+                    localStorage.setItem('realUser', JSON.stringify(data));
+                    this.setLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
     },
 }
